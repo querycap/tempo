@@ -1,0 +1,12 @@
+apiVersion: v1
+entries:
+  tempo:
+  - apiVersion: v2
+    created: "2021-01-07T08:27:58.825973821Z"
+    digest: 71f72c6af74388bc774ae96e2558095978453de0cabd8745bad28ec75be90d02
+    kubeVersion: ^1.16.0-0
+    name: tempo
+    urls:
+    - https://github.com/querycap/tempo/releases/download/tempo-0.0.0/tempo-0.0.0.tgz
+    version: 0.0.0
+generated: "2021-01-07T08:27:58.718736327Z"
