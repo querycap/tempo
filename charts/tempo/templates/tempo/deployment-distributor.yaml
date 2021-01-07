@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-distributor
+  namespace: {{ .Release.Namespace }}
+spec:
+  minReadySeconds: 10
+  replicas: 3
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-distributor
+      tempo-gossip-member: "true"
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-distributor
+        tempo-gossip-member: "true"
+    spec:
+      containers:
+        - args:
+            - -target=distributor
+            - -config.file=/conf/tempo.yaml
+            - -mem-ballast-size-mbs=1024
+          image: {{ .Values.tempo.image }}:{{ .Values.tempo.tag }}
+          imagePullPolicy: IfNotPresent
+          name: distributor
+          ports:
+            - containerPort: 3100
+              name: prom-metrics
+            - containerPort: 9411
+              name: zipkin
+          resources:
+            requests:
+              cpu: 1m
+              memory: 500Mi
+          volumeMounts:
+            - mountPath: /conf
+              name: tempo-conf
+      volumes:
+        - configMap:
+            name: {{ .Release.Name }}
+          name: tempo-conf

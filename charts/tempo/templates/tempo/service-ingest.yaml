@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-ingest
+  namespace: {{ .Release.Namespace }}
+spec:
+  clusterIP: None
+  ports:
+    - name: http-zipkin
+      port: 9411
+      protocol: TCP
+      targetPort: 9411
+  selector:
+    app: {{ .Release.Name }}-distributor
+    tempo-gossip-member: "true"

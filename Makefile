@@ -23,3 +23,15 @@ buildx: patch
 dep:
 	git submodule foreach 'tag="$$(git config -f $$toplevel/.gitmodules submodule.$$name.tag)"; [[ -n $$tag ]] && git reset --hard && git checkout $$tag || echo "this module has no branch"'
 
+
+DEBUG ?= 1
+
+HELM ?= helm upgrade --install --create-namespace
+ifeq ($(DEBUG),1)
+	HELM = helm template --dependency-update
+endif
+
+apply:
+	$(HELM) --namespace=tempo-system tempo ./charts/tempo
+
+

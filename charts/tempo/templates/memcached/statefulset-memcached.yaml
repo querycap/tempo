@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-memcached
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.memcached.replicas }}
+  serviceName: {{ .Release.Name }}-memcached
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-memcached
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-memcached
+    spec:
+      containers:
+      - args:
+        - -m 1024
+        - -I 5m
+        - -c 1024
+        - -v
+        image: {{ .Values.memcached.image }}:{{ .Values.memcached.tag }}
+        imagePullPolicy: IfNotPresent
+        name: memcached
+        ports:
+        - containerPort: 11211
+          name: client
+        resources:
+          limits:
+            memory: 1536Mi
+          requests:
+            cpu: 500m
+            memory: 1329Mi
+      - args:
+        - --memcached.address=localhost:11211
+        - --web.listen-address=0.0.0.0:9150
+        image: {{ .Values.memcached.exporter.image }}:{{ .Values.memcached.exporter.tag }}
+        imagePullPolicy: IfNotPresent
+        name: exporter
+        ports:
+        - containerPort: 9150
+          name: http-metrics
+  updateStrategy:
+    type: RollingUpdate

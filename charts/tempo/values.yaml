@@ -1,0 +1,31 @@
+tempo:
+  tag: v0.4.0
+
+  image: docker.io/querycaptempo/tempo
+
+  query:
+    image: docker.io/querycaptempo/tempo-query
+
+memcached:
+  image: docker.io/library/memcached
+  tag: 1.5.17-alpine
+  replicas: 1
+
+  exporter:
+    image: docker.io/prom/memcached-exporter
+    tag: v0.6.0
+
+retention: 48h
+
+storage:
+  capacity: 30G
+  storageClassName: local-path
+
+backend:
+  backend: s3
+  s3:
+    bucket: tempo
+    endpoint: s3:9000
+    insecure: true
+    access_key: AKIDxxxxxxxxx
+    secret_key: AKEYyyyyyyyyy23123123123

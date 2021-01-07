@@ -2,6 +2,9 @@ name: Docker publish
 
 on:
   push:
+    paths:
+      - .gitmodules
+      - Makefile
     branches:
       - 'master'
 
