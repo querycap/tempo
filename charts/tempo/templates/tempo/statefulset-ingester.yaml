@@ -16,6 +16,16 @@ spec:
         app: {{ .Release.Name }}-ingester
         tempo-gossip-member: "true"
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - {{ .Release.Name }}-ingester
+              topologyKey: kubernetes.io/hostname
       containers:
         - args:
             - -target=ingester

@@ -21,6 +21,16 @@ spec:
         app: {{ .Release.Name }}-querier
         tempo-gossip-member: "true"
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - {{ .Release.Name }}-querier
+              topologyKey: kubernetes.io/hostname
       containers:
         - args:
             - -target=querier
