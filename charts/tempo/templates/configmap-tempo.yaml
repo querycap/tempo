@@ -13,7 +13,7 @@ data:
             jaeger:
                 protocols:
                     thrift_http: null
-            opencensus: null
+            zipkin: null
     ingester:
         lifecycler:
             ring:
