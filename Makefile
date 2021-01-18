@@ -21,7 +21,7 @@ buildx: patch
  		./tempo
 
 dep:
-	git submodule foreach 'tag="$$(git config -f $$toplevel/.gitmodules submodule.$$name.tag)"; [[ -n $$tag ]] && git reset --hard && git checkout $$tag || echo "this module has no branch"'
+	git submodule foreach 'tag="$$(git config -f $$toplevel/.gitmodules submodule.$$name.tag)"; [[ -n $$tag ]] && git reset --hard && git fetch --tags && git checkout $$tag || echo "this module has no branch"'
 
 
 DEBUG ?= 1
