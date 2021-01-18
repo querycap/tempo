@@ -12,7 +12,7 @@ backend:
     secret_key: supersecret
 distributor:
   replicas: 2
-  image: grafana/tempo:v0.5.0
+  image: querycaptempo/tempo:v0.5.0
   resources: 
     requests:
       cpu:      1
@@ -23,40 +23,40 @@ distributor:
         thrift_http: null
 compactor:
   replicas: 1
-  image: grafana/tempo:v0.5.0
+  image: querycaptempo/tempo:v0.5.0
   resources: 
     requests:
       cpu:      250m
       memory:   1Gi
 ingester:
   replicas: 3
-  image: grafana/tempo:v0.5.0
+  image: querycaptempo/tempo:v0.5.0
   resources: 
     requests:
       cpu:      1
       memory:   1.5Gi
 resources:
-  image: grafana/tempo:v0.5.0
+  image: querycaptempo/tempo:v0.5.0
   resources: 
     requests:
       cpu:      500m
       memory:   2Gi
 queryFrontend:
   replicas: 1
-  image: grafana/tempo:v0.5.0
+  image: querycaptempo/tempo:v0.5.0
   resources:
     requests:
       cpu:      250m
       memory:   500Mi
 querier:
   replicas: 1
-  image: grafana/tempo:v0.5.0
+  image: querycaptempo/tempo:v0.5.0
   resources: 
     requests:
       cpu:      250m
       memory:   500Mi
 tempoQuery:
-  image: grafana/tempo-query:v0.5.0
+  image: querycaptempo/tempo-query:v0.5.0
   resources: 
     requests:
       cpu:      50m

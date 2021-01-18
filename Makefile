@@ -40,5 +40,6 @@ sync-helm:
 	cp tempo/operations/helm/tempo-microservices/templates/* charts/tempo/templates/
 	for i in $(shell find charts/tempo/templates -type f); do sed -i '' 's/default.svc.cluster.local/{{ .Release.Namespace }}.svc.cluster.local/g' $${i}; done
 	cp tempo/operations/helm/tempo-microservices/values.yaml charts/tempo/values.yaml
-	sed -i '' 's/:latest/:$(VERSION)/g' charts/tempo/values.yaml
+	sed -i '' 's/grafana\/tempo:latest/querycaptempo\/tempo:$(VERSION)/g' charts/tempo/values.yaml
+	sed -i '' 's/grafana\/tempo-query:latest/querycaptempo\/tempo-query:$(VERSION)/g' charts/tempo/values.yaml
 
