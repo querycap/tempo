@@ -1,9 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-compactor
-  namespace: {{ .Release.Namespace }}
-data:
+  name: tempo-compactor
+data:  
   tempo.yaml: |
     auth_enabled: false
     compactor:
@@ -16,18 +15,18 @@ data:
         abort_if_cluster_join_fails: false
         bind_port: 7946
         join_members:
-          - {{ .Release.Name }}-gossip-ring.{{ .Release.Namespace }}.svc.cluster.local:7946
+          - gossip-ring.{{ .Release.Namespace }}.svc.cluster.local:7946
     server:
         http_listen_port: 3100
     storage:
         trace:
-    {{- toYaml .Values.backend | nindent 12 }}
+            {{- toYaml .Values.backend | nindent 12 }}
             blocklist_poll: 10m
             memcached:
                 consistent_hash: true
-                host: {{ .Release.Name }}-memcached.{{ .Release.Namespace }}.svc.cluster.local
+                host: memcached
                 service: memcached-client
-                timeout: 1s
+                timeout: 500ms
             pool:
                 queue_depth: 2000
             wal:

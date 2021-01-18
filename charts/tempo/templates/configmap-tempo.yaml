@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
+  name: tempo
 data:
   overrides.yaml: |
     overrides: {}
@@ -11,7 +10,10 @@ data:
     compactor: null
     distributor:
         receivers:
-            zipkin: null
+            jaeger:
+                protocols:
+                    thrift_http: null
+            opencensus: null
     ingester:
         lifecycler:
             ring:
@@ -20,22 +22,20 @@ data:
         abort_if_cluster_join_fails: false
         bind_port: 7946
         join_members:
-          - {{ .Release.Name }}-gossip-ring.{{ .Release.Namespace }}.svc.cluster.local:7946
+          - gossip-ring.{{ .Release.Namespace }}.svc.cluster.local:7946
     overrides:
-        ingestion_rate_limit: 10000000
-        max_traces_per_user: 0
         per_tenant_override_config: /conf/overrides.yaml
     server:
         http_listen_port: 3100
     storage:
         trace:
-    {{- toYaml .Values.backend | nindent 12 }}
-            blocklist_poll: 5m
+            {{- toYaml .Values.backend | nindent 12 }}
+            blocklist_poll: '0'
             memcached:
                 consistent_hash: true
-                host: {{ .Release.Name }}-memcached.{{ .Release.Namespace }}.svc.cluster.local
+                host: memcached
                 service: memcached-client
-                timeout: 1s
+                timeout: 500ms
             pool:
                 queue_depth: 2000
             wal:

@@ -1,31 +1,67 @@
-tempo:
-  tag: v0.4.0
-
-  image: docker.io/querycaptempo/tempo
-
-  query:
-    image: docker.io/querycaptempo/tempo-query
-
-memcached:
-  image: docker.io/library/memcached
-  tag: 1.5.17-alpine
-  replicas: 1
-
-  exporter:
-    image: docker.io/prom/memcached-exporter
-    tag: v0.6.0
-
 retention: 48h
-
 storage:
   capacity: 30G
   storageClassName: local-path
-
 backend:
   backend: s3
   s3:
+    access_key: tempo
     bucket: tempo
-    endpoint: s3:9000
+    endpoint: minio:9000
     insecure: true
-    access_key: AKIDxxxxxxxxx
-    secret_key: AKEYyyyyyyyyy23123123123
+    secret_key: supersecret
+distributor:
+  replicas: 2
+  image: grafana/tempo:v0.5.0
+  resources: 
+    requests:
+      cpu:      1
+      memory:   500Mi
+  receivers:
+    jaeger:
+      protocols:
+        thrift_http: null
+compactor:
+  replicas: 1
+  image: grafana/tempo:v0.5.0
+  resources: 
+    requests:
+      cpu:      250m
+      memory:   1Gi
+ingester:
+  replicas: 3
+  image: grafana/tempo:v0.5.0
+  resources: 
+    requests:
+      cpu:      1
+      memory:   1.5Gi
+resources:
+  image: grafana/tempo:v0.5.0
+  resources: 
+    requests:
+      cpu:      500m
+      memory:   2Gi
+queryFrontend:
+  replicas: 1
+  image: grafana/tempo:v0.5.0
+  resources:
+    requests:
+      cpu:      250m
+      memory:   500Mi
+querier:
+  replicas: 1
+  image: grafana/tempo:v0.5.0
+  resources: 
+    requests:
+      cpu:      250m
+      memory:   500Mi
+tempoQuery:
+  image: grafana/tempo-query:v0.5.0
+  resources: 
+    requests:
+      cpu:      50m
+      memory:   100Mi
+memcached:
+  image: memcached:1.5.17-alpine
+  replicas: 0
+

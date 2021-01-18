@@ -1,26 +1,32 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-memcached
-  namespace: {{ .Release.Namespace }}
+  name: memcached
 spec:
   replicas: {{ .Values.memcached.replicas }}
-  serviceName: {{ .Release.Name }}-memcached
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-memcached
+      name: memcached
+  serviceName: memcached
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-memcached
+        name: memcached
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                name: memcached
+            topologyKey: kubernetes.io/hostname
       containers:
       - args:
         - -m 1024
         - -I 5m
         - -c 1024
         - -v
-        image: {{ .Values.memcached.image }}:{{ .Values.memcached.tag }}
+        image: {{ .Values.memcached.image }}
         imagePullPolicy: IfNotPresent
         name: memcached
         ports:
@@ -35,7 +41,7 @@ spec:
       - args:
         - --memcached.address=localhost:11211
         - --web.listen-address=0.0.0.0:9150
-        image: {{ .Values.memcached.exporter.image }}:{{ .Values.memcached.exporter.tag }}
+        image: prom/memcached-exporter:v0.6.0
         imagePullPolicy: IfNotPresent
         name: exporter
         ports:

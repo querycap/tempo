@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-query
-  namespace: {{ .Release.Namespace }}
+  name: tempo-query
 data:
   tempo-query.yaml: |
     backend: localhost:3100

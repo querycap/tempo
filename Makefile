@@ -35,3 +35,10 @@ apply:
 	$(HELM) --namespace=tempo-system tempo ./charts/tempo
 
 
+sync-helm:
+	rm -rf charts/tempo/templates/*
+	cp tempo/operations/helm/tempo-microservices/templates/* charts/tempo/templates/
+	for i in $(shell find charts/tempo/templates -type f); do sed -i '' 's/default.svc.cluster.local/{{ .Release.Namespace }}.svc.cluster.local/g' $${i}; done
+	cp tempo/operations/helm/tempo-microservices/values.yaml charts/tempo/values.yaml
+	sed -i '' 's/:latest/:$(VERSION)/g' charts/tempo/values.yaml
+
