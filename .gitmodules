@@ -1,4 +1,4 @@
 [submodule "tempo"]
 	path = tempo
 	url = https://github.com/grafana/tempo.git
-	tag = v0.6.0
+	tag = v0.7.0
