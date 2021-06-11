@@ -8,7 +8,7 @@ HUB = docker.io/querycaptempo
 TARGETARCHS = amd64 arm64
 
 patch:
-	cd tempo && sed -i -e 's/jaegertracing\/jaeger-query:1.20.0/querycapjaegertracing\/jaeger-query:1.21.0/g' cmd/tempo-query/Dockerfile
+	cd tempo && sed -i -e 's/jaegertracing\/jaeger-query/querycapjaegertracing\/jaeger-query/g' cmd/tempo-query/Dockerfile
 
 buildx: patch
 	cd tempo && sh -c "$(foreach arch,$(TARGETARCHS),GOOS=linux GOARCH=$(arch) make $(COMPONENT) VERSION=$(VERSION);)"
